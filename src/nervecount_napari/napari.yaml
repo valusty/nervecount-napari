@@ -1,0 +1,36 @@
+name: nervecount-napari
+contributions:
+  commands:
+    - id: nervecount-napari.analyze
+      title: Analyze
+      python_name: nervecount_napari._widget:analyze
+    - id: nervecount-napari.preprocessing
+      title: Preprocessing
+      python_name: nervecount_napari._widget:preprocessing
+    - id: nervecount-napari.multiotsu
+      title: Multi-Otsu
+      python_name: nervecount_napari._widget:multiotsu
+    - id: nervecount-napari.opening
+      title: Opening
+      python_name: nervecount_napari._widget:opening
+    - id: nervecount-napari.watershed_seg
+      title: Watershed segmentation
+      python_name: nervecount_napari._widget:watershed_seg
+    - id: nervecount-napari.quantify_all
+      title: Quantify_all
+      python_name: nervecount_napari._widget:quantify_all
+
+  widgets:
+    - command: nervecount-napari.analyze
+      display_name: Analyze
+    - command: nervecount-napari.preprocessing
+      display_name: Preprocessing
+    - command: nervecount-napari.multiotsu
+      display_name: Multi-Otsu
+    - command: nervecount-napari.opening
+      display_name: Opening
+    - command: nervecount-napari.watershed_seg
+      display_name: Watershed segmentation
+    - command: nervecount-napari.quantify_all
+      display_name: Quantify_all
+
