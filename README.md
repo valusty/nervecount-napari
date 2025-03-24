@@ -9,13 +9,9 @@ The plugin automates all needed processes, making it a helpful tool for evaluati
 
 ------
 
-## Functions
-
-------
-
 ### Preprocessing
 
-The `preprocessing` function is designed to preprocess image data for further segmentation and analysis. This function performs several steps, including background correction of the chosen channel, maximum projection of 3D picture, and median filtering, which help enhance image quality
+The `preprocessing`is designed to preprocess image data for further segmentation and analysis. This setup performs several steps, including background correction of the chosen channel, maximum projection of 3D picture, and median filtering, which help enhance image quality
 
 #### Parameters
 
@@ -39,7 +35,7 @@ The `preprocessing` function is designed to preprocess image data for further se
 
 ### Multi-Otsu
 
-The `multiotsu` function applies the Multi-Otsu thresholding method to segment an image into multiple regions based on pixel intensity for identifying different structures or areas in an image that exhibit distinct intensity values
+The `multiotsu` applies the Multi-Otsu thresholding method to segment an image into multiple regions based on pixel intensity for identifying different structures or areas in an image that exhibit distinct intensity values
 
 #### Parameters
 
@@ -47,7 +43,7 @@ The `multiotsu` function applies the Multi-Otsu thresholding method to segment a
 
 #### Steps
 
-1.  Multi-Otsu Thresholding for determining multiple threshold values that divide the pixel intensities of the image into different regions - *for distinguishing between different structures based on the intensity*
+1.  Multi-Otsu thresholding for determining multiple threshold values that divide the pixel intensities of the image into different regions - *for distinguishing between different structures based on the intensity*
 2. Segmentation into regions based on the calculated thresholds 
 3.  Masking for division of our image into different regions: `length_mask_raw` and `top_mask_raw` correspond to specific regions based on the thresholds (in this case, `regions_img == 1` for one region and `regions_img == 2` for another) - *for ensuring that only the correctly aligned axons are measured, avoiding measurements of misdirected or incorrectly oriented axons, which can negatively impact subsequent morphometric analysis*
 
@@ -59,7 +55,7 @@ The `multiotsu` function applies the Multi-Otsu thresholding method to segment a
 
 ### Opening
 
-The `opening` function applies a morphological opening operation to a label mask to refine and smooth the labeled regions to eliminate small noise and smooth boundaries by removing small objects or gaps in the label regions
+The `opening` applies a morphological opening operation to a label mask to refine and smooth the labeled regions to eliminate small noise and smooth boundaries by removing small objects or gaps in the label regions
 
 #### Parameters
 
@@ -78,7 +74,7 @@ The `opening` function applies a morphological opening operation to a label mask
 
 ### Watershed segmentation
 
-The `watershed_seg` function applies the watershed segmentation technique to label regions in an image based on the distance transform - for separating overlapping or closely connected objects, such as axons, and for enhancing boundaries to distinguish distinct regions in the label mask
+The `watershed_seg` applies the watershed segmentation technique to label regions in an image based on the distance transform - for separating overlapping or closely connected objects, such as axons, and for enhancing boundaries to distinguish distinct regions in the label mask
 
 #### Parameters
 
@@ -100,7 +96,7 @@ The `watershed_seg` function applies the watershed segmentation technique to lab
 
 ### Quantify all
 
-The `quantify_all` function is designed to quantify various properties of labeled regions in an image, such as axon measurements and intensity properties, and save the results as a CSV file. This function computes morphometric properties for each region, including major and minor axis lengths, area, and intensity, and then generates summary statistics for the entire field of view
+The `quantify_all` is designed to quantify various properties of labeled regions in an image, such as axon measurements and intensity properties, and save the results as a CSV file. It computes morphometric properties for each region, including major and minor axis lengths, area, and intensity, and then generates summary statistics for the entire field of view
 
 #### Parameters
 
@@ -137,7 +133,7 @@ The `quantify_all` function is designed to quantify various properties of labele
 
 ### Additional: Analyze
 
-The `analyze` function combines multiple processing and segmentation steps into a single pipeline, automating image preprocessing, thresholding, morphological operations, and watershed segmentation. It integrates the functionality of `preprocessing`, `multiotsu`, `opening`, and `watershed_seg` into one process
+The `analyze` combines multiple processing and segmentation steps into a single pipeline, automating image preprocessing, thresholding, morphological operations, and watershed segmentation. It integrates the functionality of `preprocessing`, `multiotsu`, `opening`, and `watershed_seg` into one process
 
 #### Parameters
 
