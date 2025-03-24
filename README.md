@@ -1,7 +1,11 @@
 nervecount-napari
 ===============
 
-nervecount: napari plugin for segmentation of immunofluorescent images of nerve transverse section for evaluation of morphometric parameters of axons
+nervecount: napari plugin for segmentation of immunofluorescent images of nerve transverse section for evaluation of morphometric parameters of axons 
+
+This tool processes confocal images stained for Neurofilament Heavy Chain (NfH) —a marker for axons— to extract key morphometric parameters. The plugin automates image preprocessing, segmentation, and quantitative analysis, making it a useful tool for neuroanatomical research and axonal morphometry. 
+
+The plugin automates all needed processes, making it a helpful tool for evaluating axonal morphometry. Also, the plugin is optimized to run efficiently without the need for high-performance hardware
 
 ------
 
@@ -31,8 +35,6 @@ The `preprocessing` function is designed to preprocess image data for further se
 - `{image.name}_ch{channel}_max_pr` (Image): The maximum intensity projection of the corrected image - *for further usage in the quantification step*
 - `{image.name}_ch{channel}_preprocessed` (Image): The median-filtered image after background correction and maximum projection
 
-![image-20250324200414036](C:\Users\USER\AppData\Roaming\Typora\typora-user-images\image-20250324200414036.png)
-
 ------
 
 ### Multi-Otsu
@@ -53,8 +55,6 @@ The `multiotsu` function applies the Multi-Otsu thresholding method to segment a
 
 - `{image.name}_top_multiotsu` (Label): A label mask for the region identified as "top"
 
-![image-20250324202600432](C:\Users\USER\AppData\Roaming\Typora\typora-user-images\image-20250324202600432.png)
-
 ------
 
 ### Opening
@@ -73,8 +73,6 @@ The `opening` function applies a morphological opening operation to a label mask
 #### Output
 
 - `{image.name}_top_multiotsu_opened` (Label): A label mask where small objects and gaps are removed
-
-![image-20250324202705710](C:\Users\USER\AppData\Roaming\Typora\typora-user-images\image-20250324202705710.png)
 
 ------
 
@@ -98,8 +96,6 @@ The `watershed_seg` function applies the watershed segmentation technique to lab
 - `{label.name}_watershed_boundaries` (Label):  A label mask showing the boundaries of the segmented regions
 - `{label.name}_watershed`): A label mask with the final watershed segmentation
 
-![image-20250324202728720](C:\Users\USER\AppData\Roaming\Typora\typora-user-images\image-20250324202728720.png)
-
 ------
 
 ### Quantify all
@@ -113,62 +109,95 @@ The `quantify_all` function is designed to quantify various properties of labele
 - `date_microscopy` (str): The date when the microscopy image was taken
 - `op_date` (str): The date of the operation or analysis
 - `animal` (str): The animal identifier for the experiment
-- `paw` (Literal['L', 'R']): The paw designation, either 'L' for left or 'R' for right
-- `group` (Literal['co', 's_tube', 'eptfe', 'autoneuropl', 'neurorr', 'scaffold']): The experimental group (default is `'co'`)
-- `spot` (Literal['ps', 'tube', 'ds'], optional): The spot designation in the experiment (default is `'ps'`).
-- `pixel_size` (float, optional): The pixel size in micrometers per pixel (default is `0.317`).
-- `image_dimensions` (int, optional): The dimension of the image in pixels (default is `1024`).
-- `saving_path` (pathlib.Path, optional): The path where the results will be saved as a CSV file (default is the current working directory).
+- `paw` (Literal, ['L', 'R']): The paw designation, either 'L' for left or 'R' for right
+- `group` (Literal, ['co', 's_tube', 'eptfe', 'autoneuropl', 'neurorr', 'scaffold']): The experimental group (default is `'co'`)
+- `spot` (Literal, ['ps', 'tube', 'ds']): The spot designation in the experiment (default is `'ps'`)
+- `pixel_size` (float): The pixel size in micrometers per pixel (default is `0.317`)
+- `image_dimensions` (int): The dimension of the image in pixels (default is `1024`)
+- `saving_path` (Path): The path where the results will be saved as a CSV file (default is the current working directory)
 
 #### Steps
 
-1. Computing the distance transform of the label mask, where each pixel’s value represents the distance to the nearest background pixel - *to identify the center of each object in the image*
-2. Identifying local maxima (peaks) in the image, which are potential markers for different regions - *for further definition of separate regions in the watershed segmentation*
-3. Watershed segmentation - *for segmentation where different regions are separated based on their boundaries*
-4. Detection of the boundaries of the segmented regions - *for highlighting the outer borders of the segmented regions*
+1. Extraction of various properties from the labeled regions, including mean intensity, area, and axis lengths (major and minor axes)
+2. Conversation of the axis lengths (*major and minor*) are converted from pixels to micrometers using the provided `pixel_size`
+3. Calculation of the axis ratio (*minor/major axis*), as well as additional summary statistics, including:
+   1. Total number of labels
+   2. Total area of axons in the field of view
+   3. Area of axons as a percentage of the total image area
+   4. Area of axons in square millimeters and as a percentage of the total area
+
+4.  Saving quantification results and summary statistics are concatenated into a final data frame as a CSV file at the specified `saving_path`. The filename includes the operation date, experimental group, paw, and spot 
+5. Displaying results for preview
 
 #### Output
 
-- `{label.name}_watershed_boundaries` (Label):  A label mask showing the boundaries of the segmented regions
-- `{label.name}_watershed`): A label mask with the final watershed segmentation
-
-![image-20250324202923880](C:\Users\USER\AppData\Roaming\Typora\typora-user-images\image-20250324202923880.png)
+- `{op_date}_{group}_{paw}_{spot}_{image.name}_quantification.csv`:  A .csv file containing the detailed properties for each labeled region and summary statistics for the entire field of view
 
 ------
 
 ### Additional: Analyze
 
-![image-20250324202948379](C:\Users\USER\AppData\Roaming\Typora\typora-user-images\image-20250324202948379.png)
+The `analyze` function combines multiple processing and segmentation steps into a single pipeline, automating image preprocessing, thresholding, morphological operations, and watershed segmentation. It integrates the functionality of `preprocessing`, `multiotsu`, `opening`, and `watershed_seg` into one process
+
+#### Parameters
+
+- `image` (Image): The input image to be analyzed
+- `channel` (int): The selected image channel for processing (default is `1`)
+- `ax` (int): The axis along which the maximum projection is calculated (default is `0`)
+- `morph_disk_prepro` (int): Kernel size for median filtering in the preprocessing step (default is `2`)
+- `morph_disk_opening` (int): Kernel size for morphological opening  (default is `2`)
+
+#### Output
+
+- `{image.name}_ch{channel}_max_pr` (Image): Maximum projection of the selected channel
+- `{image.name}_ch{channel}_preprocessed'` (Image): Preprocessed image after median filtering
+- `{image.name}_top_multiotsu_opened` (Label): Segmentation mask after morphological opening
+- `{image.name}_watershed_boundaries` (Label): Boundary mask of segmented objects
+- `{image.name}_watershed` (Label): Watershed-segmented label mask
 
 ------
 
-### Plugin structure:
+### Further directions & modifications
+
+We are actively working on expanding the functionality of `nervecount` to support additional cases, including:
+
+1. A function for creating and appending data to an existing dataset, containing data from all analyzed images, allowing for easier analysis of results across multiple images and groups of animals
+2. Developing a segmentation pipeline for detecting myelin sheaths on confocal images stained for NfH and myelin basic protein (MBP)
+
+Also in plans is the development of a pipeline for analysis of images for detecting both myelinating and non-myelinating Schwann cells on confocal images stained for NfH and S100
+
+------
+
+### Installation 
+
+Set up a new conda environment with Python 3.12:
+
 ```
-nervecount-napari/
-└── src/
-│   └── nervecount_napari/
-│       ├── __init__.py
-│       ├── napari.yaml
-│       └── _widget.py
-├─── pyproject.toml
-├─── setup.cfg
-├─── README.md
-├─── LICENSE
-└─── .gitignore
+conda create -n nervecount python>3.12 
 ```
 
-### Dependency
-- python >= 3.12
-- matplotlib
-- numpy
-- os
-- pandas
-- pathlib
-- scikit-image
-- scipy
+Activate existing environment:
 
-### Local installation in editable mode with `pip`:
 ```
-python -m pip install -e .
+conda activate nervecount
+```
+
+Install napari:
+
+```
+python -m pip install "napari[all]"
+```
+
+Clone the repository:
+
+```
+git clone https://github.com/valusty/nervecount-napari.git
+```
+
+Open the cloned repository via `cd` and install the plugin locally with `pip`:
+
+```
+cd nervecount-napari
+python -m pip install .
 ```
 
