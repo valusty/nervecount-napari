@@ -1,4 +1,5 @@
 import napari
+
 from napari import Viewer
 from napari.layers import Image, Labels
 from napari.utils.notifications import show_info
@@ -8,6 +9,10 @@ from magicgui import magic_factory
 from magicgui.widgets import Table
 from typing import Literal
 
+import os
+import pathlib
+
+import pandas as pd
 import numpy as np
 
 from skimage import filters, morphology, measure
@@ -20,12 +25,6 @@ from scipy import signal, stats, ndimage
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvas
-
-import pandas as pd
-
-import os
-import pathlib
-
 
 @magic_factory(call_button='analyze')
 def analyze(viewer:Viewer, image:Image, channel:int=1, ax:int=0, morph_disk_prepro:int=2, morph_disk_opening:int=2):
