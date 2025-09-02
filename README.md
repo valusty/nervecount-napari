@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/920814706.svg)](https://doi.org/10.5281/zenodo.17037042)
+
 nervecount-napari
 ===============
 
