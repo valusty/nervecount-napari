@@ -3,21 +3,21 @@
 nervecount-napari
 ===============
 
-nervecount: napari plugin for segmentation of immunofluorescent images of nerve transverse section for evaluation of morphometric parameters of axons 
+nervecount: a napari plugin for the segmentation of immunofluorescent images of nerve transverse sections for the evaluation of morphometric parameters of axons
 
-This tool processes confocal images stained for Neurofilament Heavy Chain (NfH) — a marker for axons — to extract key morphometric parameters. The plugin automates image preprocessing, segmentation, and quantitative analysis, making it a useful tool for neuroanatomical research and axonal morphometry
+This tool processes confocal images stained for Neurofilament Heavy Chain (NfH), a marker for axons, to extract key morphometric parameters. The plugin automates image preprocessing, segmentation, and quantitative analysis, making it a helpful tool for neuroanatomical research and axonal morphometry
 
-The plugin automates all needed processes, making it a helpful tool for evaluating axonal morphometry. Also, the plugin is optimized to run efficiently without the need for high-performance hardware
+The plugin automates all needed processes, making it a helpful tool for evaluating axonal morphometry. Additionally, the plugin is optimized to run efficiently without requiring high-performance hardware
 
 ------
 
 ### Preprocessing
 
-The `preprocessing`is designed to preprocess image data for further segmentation and analysis. This setup performs several steps, including background correction of the chosen channel, maximum projection of 3D picture, and median filtering, which help enhance image quality
+The `preprocessing` is designed to preprocess image data for further segmentation and analysis. This setup performs several steps, including background correction of the chosen channel, maximum projection of the 3D picture, and median filtering, which help enhance image quality
 
 #### Parameters
 
-- `image` (Image): The image object containing data for further processing
+- `image` (Image): The image object containing data for further processing. *Note: At this stage, the image should contain more than one optical plane along the Z-axis*
 - `channel` (int): The specific channel of the image that contains data (default is `0`)
 - `ax` (int):  The axis along which to compute the maximum projection (default is `0`)
 - `morph_disk` (int): The disk size for the morphological median filter (default is `2`)
@@ -37,7 +37,7 @@ The `preprocessing`is designed to preprocess image data for further segmentation
 
 ### Multi-Otsu
 
-The `multiotsu` applies the Multi-Otsu thresholding method to segment an image into multiple regions based on pixel intensity for identifying different structures or areas in an image that exhibit distinct intensity values
+The `multiotsu` function applies the Multi-Otsu thresholding method to segment an image into multiple regions based on pixel intensity, identifying different structures or areas in the image that exhibit distinct intensity values.
 
 #### Parameters
 
@@ -47,7 +47,7 @@ The `multiotsu` applies the Multi-Otsu thresholding method to segment an image i
 
 1.  Multi-Otsu thresholding for determining multiple threshold values that divide the pixel intensities of the image into different regions - *for distinguishing between different structures based on the intensity*
 2. Segmentation into regions based on the calculated thresholds 
-3.  Masking for division of our image into different regions: `length_mask_raw` and `top_mask_raw` correspond to specific regions based on the thresholds (in this case, `regions_img == 1` for one region and `regions_img == 2` for another) - *for ensuring that only the correctly aligned axons are measured, avoiding measurements of misdirected or incorrectly oriented axons, which can negatively impact subsequent morphometric analysis*
+3.  Masking for division of our image into different regions: `length_mask_raw` and `top_mask_raw` correspond to the specific areas based on the thresholds (in this case, `regions_img == 1` for one region and `regions_img == 2` for another) - *for ensuring that only the correctly aligned axons are measured, avoiding measurements of misdirected or incorrectly oriented axons, which can negatively impact subsequent morphometric analysis*
 
 #### Output
 
@@ -57,7 +57,7 @@ The `multiotsu` applies the Multi-Otsu thresholding method to segment an image i
 
 ### Opening
 
-The `opening` applies a morphological opening operation to a label mask to refine and smooth the labeled regions to eliminate small noise and smooth boundaries by removing small objects or gaps in the label regions
+The `opening` operation applies a morphological opening to a label mask, refining and smoothing the labeled regions to eliminate small noise and smooth boundaries by removing small objects or gaps within the label regions
 
 #### Parameters
 
@@ -124,7 +124,7 @@ The `quantify_all` is designed to quantify various properties of labeled regions
    3. Area of axons as a percentage of the total image area
    4. Area of axons in square millimeters and as a percentage of the total area
 
-4.  Saving quantification results and summary statistics are concatenated into a final data frame as a CSV file at the specified `saving_path`. The filename includes the operation date, experimental group, paw, and spot 
+4. Saving quantification results and summary statistics are concatenated into a final data frame as a CSV file at the specified `saving_path`. The filename includes the operation date, experimental group, paw, and spot 
 5. Displaying results for preview
 
 #### Output
@@ -199,3 +199,20 @@ cd nervecount-napari
 python -m pip install .
 ```
 
+------
+
+### Cite this work
+
+If you use this plugin in your research, please cite:
+
+```bibtex
+@software{ustymenko_nervecount_2025,
+  author       = {Ustymenko, Valeriia},
+  title        = {valusty/nervecount-napari: v0.1.0-beta},
+  version      = {v0.1.0-beta},
+  year         = {2025},
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.17037042},
+  url          = {https://doi.org/10.5281/zenodo.17037042}
+}
+```
