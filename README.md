@@ -5,9 +5,7 @@ nervecount-napari
 
 nervecount: a napari plugin for the segmentation of immunofluorescent images of nerve transverse sections for the evaluation of morphometric parameters of axons
 
-This tool processes confocal images stained for Neurofilament Heavy Chain (NfH), a marker for axons, to extract key morphometric parameters. The plugin automates image preprocessing, segmentation, and quantitative analysis, making it a helpful tool for neuroanatomical research and axonal morphometry
-
-The plugin automates all needed processes, making it a helpful tool for evaluating axonal morphometry. Additionally, the plugin is optimized to run efficiently without requiring high-performance hardware
+This tool processes confocal images stained for Neurofilament Heavy Chain (NfH), a marker for axons, to extract key morphometric parameters. The plugin automates all needed processes, making it a helpful tool for evaluating axonal morphometry. Additionally, the plugin is optimized to run efficiently without requiring high-performance hardware
 
 ------
 
